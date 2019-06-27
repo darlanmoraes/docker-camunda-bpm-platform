@@ -1,3 +1,48 @@
+# Running Camund with LDAP Authentication
+
+This fork is a test that was made using LDAP users + groups.
+
+You will need Docker:
+
+```
+Docker version 18.06.1-ce, build e68fc7a
+```
+
+Building Camunda 7.4.0:
+
+```
+docker build -t camunda-ldap/camunda-bpm-platform --build-arg VERSION=7.4.0
+```
+
+Starting LDAP:
+```
+docker run -p 389:389 -p 636:636 --detach osixia/openldap:latest
+```
+
+Starting Camunda 7.4.0:
+```
+docker run -d -p 8080:8080 -v $PWD/bpm-platform.xml:/camunda/conf/bpm-platform.xml camunda-ldap/camunda-bpm-platform
+```
+
+Creating groups and users:
+
+```
+docker cp ldap-entries.ldif $(docker ps | grep 'openldap' | awk '{ print $1 }'):/ldap-entries.ldif
+docker exec -it $(docker ps | grep 'openldap' | awk '{ print $1 }') ldapadd -x -D "cn=admin,dc=example,dc=org" -H ldap://localhost -f /ldap-entries.ldif -w admin
+```
+
+You can test to see if everything is fine with LDAP:
+
+```
+docker exec -it $(docker ps | grep 'openldap' | awk '{ print $1 }') ldapsearch -x -H ldap://localhost -b dc=example,dc=org -D "cn=admin,dc=example,dc=org" -w admin
+```
+
+Docker useful commands:
+```
+docker kill $(docker ps | grep 'openldap' | awk '{ print $1 }') 
+docker kill $(docker ps -q)
+```
+
 # Camunda BPM Platform Docker Images
 
 This Camunda BPM community project provides docker images of the latest Camunda
