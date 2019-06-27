@@ -11,7 +11,7 @@ Docker version 18.06.1-ce, build e68fc7a
 Building Camunda 7.4.0:
 
 ```
-docker build -t camunda-ldap/camunda-bpm-platform --build-arg VERSION=7.4.0
+docker build -t camunda-ldap/camunda-bpm-platform --build-arg VERSION=7.4.0 .
 ```
 
 Starting LDAP:
