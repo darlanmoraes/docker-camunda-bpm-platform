@@ -1,4 +1,4 @@
-# Running Camund with LDAP Authentication
+# Running Camunda with LDAP Authentication
 
 This fork is a test that was made using LDAP users + groups.
 
